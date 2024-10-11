@@ -37,10 +37,10 @@ export const sendMessage=async(req,res)=>{
         
         //whereas this will run in parallel.
         await Promise.all([conversation.save(),newMessage.save()]);
-        res.status(200).json(newMessage);
+        res.status(201).json(newMessage);
     } catch (error) {
         console.log("Error in sendMessage Controller: ",error.message);
-        res.status(500).json({error:"Internal server error"});
+        res.status(500).json({error:"Internal server error messageController"});
     }
 }
 
@@ -54,12 +54,12 @@ export const getMessages=async(req,res)=>{
             participants:{$all:[senderId,userToChatId]}
         }).populate("messages");    //NOT REFERENCE BUT ACTUAL MESSAGES
         if(!conversation){
-            res.status(200).json([]);
+            return res.status(200).json([]);
         }
         const messages=conversation.messages;
-        res.status(200).json(messages);
+        return res.status(200).json(messages);
     } catch (error) {
         console.log("Error in getMessages Controller: ",error.message);
-        res.status(500).json({error:"Internal server error"});
+        return res.status(500).json({error:"Internal server error"});
     }
 }

@@ -1,18 +1,31 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Messages from './Messages'
 import MessageInput from './MessageInput'
 import {TiMessages} from 'react-icons/ti'
+import useConversation from '../../zustand/useConversation'
+import { set } from 'mongoose'
 
 const MessageContainer = () => {
-  const noChatSelected=true;
+  
+  const {selectedConversation,setSelectedConversation}=useConversation();
+
+  //when we logout we want out zustand global to be null again so that value of selectedConversation get nullified after we logout
+  useEffect(()=>{
+
+    //as return function gets called before current process
+    return ()=>{
+      //cleanup Function  (unmount)
+      setSelectedConversation(null);
+    }
+  },[setSelectedConversation])
   return (
     <div className='md:min-w-[450px] flex flex-col'>
-        {noChatSelected?<NoChatSelected/>:(
+        {!selectedConversation?<NoChatSelected/>:(
           <>
             {/* Header  */}
             <div className="bg-purple-950 px-4 py-2 mb-2">
                 <span className="label-text">To</span>{" "}
-                <span className="text-gray-200 font-bold">John Doe</span>
+                <span className="text-gray-200 font-bold">{selectedConversation.fullName}</span>
             </div> 
           </>
         )}
